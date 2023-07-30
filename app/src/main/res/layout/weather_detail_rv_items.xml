@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/cv_weatherDetailContainer"
+        android:layout_margin="5dp"
+        android:background="@android:color/transparent"
+        android:elevation="5dp"
+        app:cardCornerRadius="10dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_back"
+            android:id="@+id/rl_weatherDetailContainer"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_time"
+                android:text="Time"
+                android:textSize="20sp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_tempValue"
+                android:text="23"
+                android:layout_marginTop="5dp"
+                android:textSize="22sp"
+                android:layout_below="@id/tv_time"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/iv_tempIcon"
+                android:src="@mipmap/ic_launcher"
+                android:layout_below="@id/tv_tempValue"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_windSpeed"
+                android:text="43"
+                android:textSize="20sp"
+                android:layout_below="@id/iv_tempIcon"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+/>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
