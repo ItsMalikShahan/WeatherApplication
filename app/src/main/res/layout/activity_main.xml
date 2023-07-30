@@ -91,7 +91,6 @@
             android:padding="5dp"
             android:text="23C"
             android:textColor="@color/white"
-            android:textAlignment="center"
             android:textSize="32sp" />
 
         <ImageView
