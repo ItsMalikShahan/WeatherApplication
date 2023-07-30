@@ -2,14 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.cardview.widget.CardView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/cv_weatherDetailContainer"
         android:layout_margin="5dp"
-        android:background="@android:color/transparent"
+        android:background="@color/card_color"
         android:elevation="5dp"
         app:cardCornerRadius="10dp">
         <RelativeLayout

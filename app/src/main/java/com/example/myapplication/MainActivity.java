@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     RelativeLayout home;
     ProgressBar loadingPB;
-    TextView cityNameTV, temperatureFigure, temperatureCondition;
+    TextView cityNameTV, temperatureFigure, temperatureCondition, humidity, wind, feelLike, cloud, sunRise, sunSet;
     RecyclerView weatherDetail;
     TextInputEditText cityEdit;
     ImageView weatherIcon, search, backScreen;
@@ -74,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
         weather = findViewById(R.id.rv_weatherDetail);
         search = findViewById(R.id.iv_search);
         backScreen = findViewById(R.id.iv_backScreen);
+        humidity = findViewById(R.id.tv_humidityValue);
+        wind = findViewById(R.id.tv_windValue);
+        feelLike = findViewById(R.id.tv_feelLikeValue);
+        cloud = findViewById(R.id.tv_cloudValue);
+        sunRise = findViewById(R.id.tv_sunriseValue);
+        sunSet = findViewById(R.id.tv_sunsetValue);
+
+
         weatherArraylist = new ArrayList<>();
         weatherDetailAdapter = new WeatherDetailAdapter(this, weatherArraylist);
         weather.setAdapter(weatherDetailAdapter);
@@ -86,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if(location != null) {
+        if (location != null) {
             searchCityName = getCityName(location.getLongitude(), location.getLatitude());
             getWeatherInfo(searchCityName);
-        }else
+        } else
             searchCityName = "Islamabad";
         getWeatherInfo(searchCityName);
-            Log.e("TAG", "onCreate: Set default location Islamabad" );
+        Log.e("TAG", "onCreate: Set default location Islamabad");
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getCityName(double longitude, double latitude) {
-        String cityName = "Not found";
+        String cityName = "Islamabad";
         Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
         try {
             List<Address> addresses = gcd.getFromLocation(longitude, latitude, 10);
@@ -147,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void getWeatherInfo(String cityName) {
-        String url = "https://api.weatherapi.com/v1/forecast.json?key=c5144ba145fb45049de04259232507&q="+cityName+"&days=1&aqi=no&alerts=no";
-       cityNameTV.setText(cityName);
+        String url = "https://api.weatherapi.com/v1/forecast.json?key=c5144ba145fb45049de04259232507&q=" + cityName + "&days=1&aqi=no&alerts=no";
+        cityNameTV.setText(cityName);
 
-       RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 //        Log.e("TAG", "getWeatherInfo: check 1" );
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -162,27 +170,40 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     String temperature = response.getJSONObject("current").getString("temp_c");
-                    temperatureFigure.setText(temperature+"°C");
+                    temperatureFigure.setText(temperature + "°C");
                     int isDay = response.getJSONObject("current").getInt("is_day");
+                    String cloudStr = response.getJSONObject("current").getString("cloud");
+                    String humidityStr = response.getJSONObject("current").getString("humidity");
+                    String feelLikeStr = response.getJSONObject("current").getString("feelslike_c");
+                    String windStr = response.getJSONObject("current").getString("wind_kph");
                     String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
                     String conditionIcon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
                     Picasso.get().load("http:".concat(conditionIcon)).into(weatherIcon);
                     temperatureCondition.setText(condition);
-                    if (isDay==1){
-                        // Morning
-                        Picasso.get().load("https://unsplash.com/photos/OHzkfrv9Ycw").into(backScreen);
-                    }else
-                    {
+                    cloud.setText(cloudStr);
+                    humidity.setText(humidityStr);
+                    feelLike.setText(feelLikeStr+"°C");
+                    wind.setText(windStr+"km/h");
 
-                        Picasso.get().load("https://unsplash.com/photos/bWtd1ZyEy6w").into(backScreen);
+                    if (isDay == 1) {
+                        // Morning
+                        Picasso.get().load("http://unsplash.com/photos/OHzkfrv9Ycw").into(backScreen);
+                    } else {
+
+                        Picasso.get().load("http://unsplash.com/photos/bWtd1ZyEy6w").into(backScreen);
                     }
 
                     JSONObject forecastObj = response.getJSONObject("forecast");
                     JSONObject forecastO = forecastObj.getJSONArray("forecastday").getJSONObject(0);
                     JSONArray hourArray = forecastO.getJSONArray("hour");
-//                    Log.e("TAG", "getWeatherInfo: check 3" );
+                    String sunRiseStr = forecastO.getJSONObject("astro").getString("sunrise");
+                    String sunSetStr = forecastO.getJSONObject("astro").getString("sunset");
+//                    String sunRiseStr = forecastObj.getJSONObject("astro").getString("sunrise");
+                    Log.e("TAG", "onResponse: "+sunRiseStr );
+                    sunRise.setText(sunRiseStr);
+                    sunSet.setText(sunSetStr);
 
-                    for (int i =0; i<hourArray.length(); i++){
+                    for (int i = 0; i < hourArray.length(); i++) {
 //                        Log.e("TAG", "getWeatherInfo: check 4" );
 
                         JSONObject hourObj = hourArray.getJSONObject(i);
@@ -190,12 +211,12 @@ public class MainActivity extends AppCompatActivity {
                         String temp = hourObj.getString("temp_c");
                         String img = hourObj.getJSONObject("condition").getString("icon");
                         String wind = hourObj.getString("wind_kph");
-                        weatherArraylist.add( new WeatherDetailModel(time, temp, img, wind));
+                        weatherArraylist.add(new WeatherDetailModel(time, temp, img, wind));
                     }
                     weatherDetailAdapter.notifyDataSetChanged();
 
 
-                }catch (JSONException e ){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
