@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     String sunRiseStr = forecastO.getJSONObject("astro").getString("sunrise");
                     String sunSetStr = forecastO.getJSONObject("astro").getString("sunset");
 //                    String sunRiseStr = forecastObj.getJSONObject("astro").getString("sunrise");
-                    Log.e("TAG", "onResponse: "+sunRiseStr );
+//                    Log.e("TAG", "onResponse: "+sunRiseStr );
                     sunRise.setText(sunRiseStr);
                     sunSet.setText(sunSetStr);
 
