@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.Context;
@@ -46,15 +47,16 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout home;
     ProgressBar loadingPB;
     TextView cityNameTV, temperatureFigure, temperatureCondition, humidity, wind, feelLike, cloud, sunRise, sunSet;
-    RecyclerView weatherDetail;
     TextInputEditText cityEdit;
     ImageView weatherIcon, search, backScreen;
     ArrayList<WeatherDetailModel> weatherArraylist;
     RecyclerView weather;
+    SwipeRefreshLayout swipRefresh;
     WeatherDetailAdapter weatherDetailAdapter;
     LocationManager locationManager;
     int PERMISSION_CODE = 1;
     String searchCityName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         cityNameTV = findViewById(R.id.tv_cityName);
         temperatureFigure = findViewById(R.id.tv_tempFigure);
         temperatureCondition = findViewById(R.id.tv_tempCond);
-        weatherDetail = findViewById(R.id.rv_weatherDetail);
         cityEdit = findViewById(R.id.tie_city);
         weatherIcon = findViewById(R.id.iv_tempIcon);
         weather = findViewById(R.id.rv_weatherDetail);
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         cloud = findViewById(R.id.tv_cloudValue);
         sunRise = findViewById(R.id.tv_sunriseValue);
         sunSet = findViewById(R.id.tv_sunsetValue);
-
+        swipRefresh = findViewById(R.id.srl_refresher);
 
         weatherArraylist = new ArrayList<>();
         weatherDetailAdapter = new WeatherDetailAdapter(this, weatherArraylist);
@@ -111,6 +112,20 @@ public class MainActivity extends AppCompatActivity {
                 } else
                     cityNameTV.setText(city);
                 getWeatherInfo(city);
+            }
+        });
+
+        swipRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String city = cityEdit.getText().toString();
+                if (city.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Please provide city name", Toast.LENGTH_SHORT).show();
+                } else
+                    cityNameTV.setText(city);
+                getWeatherInfo(city);
+
+                swipRefresh.setRefreshing(false);
             }
         });
     }
@@ -182,29 +197,47 @@ public class MainActivity extends AppCompatActivity {
                     temperatureCondition.setText(condition);
                     cloud.setText(cloudStr);
                     humidity.setText(humidityStr);
-                    feelLike.setText(feelLikeStr+"°C");
-                    wind.setText(windStr+"km/h");
+                    feelLike.setText(feelLikeStr + "°C");
+                    wind.setText(windStr + "km/h");
+                    Log.d("check", "IsDay: "+isDay);
+                    //                   backScreen.setImageResource(R.drawable.day);
+                    Log.e("cloud", "onResponse: " + cloudStr);
+                    int CLOUD_RANGE = Integer.parseInt(cloudStr);
+                    if (CLOUD_RANGE <= 30 && isDay == 1) {
+                        backScreen.setImageResource(R.drawable.sunny);
+                        Log.d("TAG", "onResponse: if sunny");
+                    } else if (CLOUD_RANGE <= 30 && isDay == 0) {
+                        backScreen.setImageResource(R.drawable.clear_night);
+                        Log.d("TAG", "onResponse: if night");
+                    } else if (CLOUD_RANGE <= 70 && isDay == 1) {
+                        backScreen.setImageResource(R.drawable.partially_cloudy);
+                        Log.d("TAG", "onResponse: if partially day");
+                    } else if (CLOUD_RANGE <= 70 && isDay == 0) {
+                        backScreen.setImageResource(R.drawable.partially_cloudy_night);
+                        Log.d("TAG", "onResponse: if partially night");
+                    } else if (CLOUD_RANGE > 70 && isDay == 1) {
+                        backScreen.setImageResource(R.drawable.cloudy_day);
+                        Log.d("TAG", "onResponse: if cloudy day");
 
-                    if (isDay == 1) {
-                        // Morning
-                        Picasso.get().load("http://unsplash.com/photos/OHzkfrv9Ycw").into(backScreen);
-                    } else {
-
-                        Picasso.get().load("http://unsplash.com/photos/bWtd1ZyEy6w").into(backScreen);
                     }
+                    else if (CLOUD_RANGE > 70 && isDay == 0){
+                        backScreen.setImageResource(R.drawable.cloudy_night);
+                        Log.d("TAG", "onResponse: if cloudy night");
+
+                    }
+
 
                     JSONObject forecastObj = response.getJSONObject("forecast");
                     JSONObject forecastO = forecastObj.getJSONArray("forecastday").getJSONObject(0);
                     JSONArray hourArray = forecastO.getJSONArray("hour");
                     String sunRiseStr = forecastO.getJSONObject("astro").getString("sunrise");
                     String sunSetStr = forecastO.getJSONObject("astro").getString("sunset");
-//                    String sunRiseStr = forecastObj.getJSONObject("astro").getString("sunrise");
-                    Log.e("TAG", "onResponse: "+sunRiseStr );
+
                     sunRise.setText(sunRiseStr);
                     sunSet.setText(sunSetStr);
 
                     for (int i = 0; i < hourArray.length(); i++) {
-//                        Log.e("TAG", "getWeatherInfo: check 4" );
+
 
                         JSONObject hourObj = hourArray.getJSONObject(i);
                         String time = hourObj.getString("time");

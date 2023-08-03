@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_shade1"
     tools:context=".MainActivity">
 
     <ProgressBar
@@ -13,7 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="visible" />
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/srl_refresher"
+        android:layout_centerInParent="true"
+        >
     <RelativeLayout
         android:id="@+id/rl_home"
         android:layout_width="match_parent"
@@ -24,7 +28,7 @@
             android:id="@+id/iv_backScreen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@color/black_shade1" />
+             />
 
         <TextView
             android:id="@+id/tv_cityName"
@@ -390,5 +394,5 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </RelativeLayout>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>
