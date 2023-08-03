@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,26 +12,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="visible" />
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/srl_refresher"
-        android:layout_centerInParent="true"
-        >
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/rl_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="visible">
 
         <ImageView
             android:id="@+id/iv_backScreen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-
-             />
+            android:src="@color/black_shade1" />
 
         <TextView
             android:id="@+id/tv_cityName"
@@ -121,19 +113,20 @@
             android:textColor="@color/white" />
 
 
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:id="@+id/cv_weatherDetail"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/tv_tempCond"-->
-<!--            android:layout_margin="10dp"-->
-<!--            app:cardBackgroundColor="@android:color/transparent">-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_weatherDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_tempCond"
+            android:layout_margin="10dp"
+            android:elevation="5dp"
+            app:cardBackgroundColor="#333333"
+            app:cardCornerRadius="10dp">
 
             <RelativeLayout
                 android:id="@+id/rl_todayDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_tempCond"
                 android:layout_margin="10dp">
 
                 <RelativeLayout
@@ -376,7 +369,7 @@
 
             </RelativeLayout>
 
-<!--        </androidx.cardview.widget.CardView>-->
+        </androidx.cardview.widget.CardView>
 
 
         <TextView
@@ -397,6 +390,5 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</RelativeLayout>
 
+</RelativeLayout>
